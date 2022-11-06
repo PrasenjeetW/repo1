@@ -1,8 +1,10 @@
 ---
 - name: my first playbook
-  hosts: localhost
+  hosts: all
+  vars:
+   a: "hello world"
   tasks:
     - name: task_1
-      debug: 
-        msg: "hello"          
+      debug:
+        msg: "{{a}}"
 ...
