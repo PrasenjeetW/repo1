@@ -1,6 +1,6 @@
 ---
 - name: my first playbook
-  hosts: all
+  hosts: localhost
   vars:
    a: "hello world"
   tasks:
