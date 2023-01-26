@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('git-checkout') {
             steps {
-               git credentialsId: 'github', url: 'git@github.com:shubhammandade/student-ui.git'
+               git 'https://github.com/PrasenjeetW/repo1.git'
             }
         }
         stage('mvn-build') {
@@ -11,38 +11,6 @@ pipeline {
                 sh 'sudo apt-get update -y'
                 sh 'sudo apt install maven -y'
                 sh 'mvn clean package'
-            }
-        }
-        stage('s3-bucket-Artifact') {
-            steps {
-                withAWS(credentials: 'new', region: 'us-east-1') {
-                sh 'sudo apt-get install awscli -y'
-                sh 'aws s3 ls'
-                //sh 'aws s3 mb s3://stud-app-bucket2 --region=us-east-2' 
-                sh 'aws s3 cp /var/lib/jenkins/workspace/student-ui-pipeline/target/studentapp-2.2-SNAPSHOT.war s3://stud-app-bucket2/'
-            }               
-            }
-        }
-       stage('Deploy') {           
-            steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'new-deploy', keyFileVariable: 'new', usernameVariable: 'ubuntu')]) {
-                sh'''
-                ssh -i ${new} -o StrictHostKeyChecking=no ubuntu@3.137.143.104<<EOF
-                sudo apt update -y
-                sudo apt install awscli -y
-                aws --version
-                aws configure set aws_access_key_id [Paste Access-key]
-                aws configure set aws_secret_access_key [paste secret key]
-                aws s3 ls
-                aws s3 cp s3://stud-app-bucket2/studentapp-2.2-SNAPSHOT.war .
-                curl -O https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.71/bin/apache-tomcat-9.0.71.tar.gz
-                sudo tar -xvf apache-tomcat-9.0.71.tar.gz -C /opt/
-                sudo sh /opt/apache-tomcat-9.0.71/bin/shutdown.sh
-                sudo cp -rv studentapp-2.2-SNAPSHOT.war studentapp.war
-                sudo cp -rv studentapp.war /opt/apache-tomcat-9.0.71/webapps/
-                sudo sh /opt/apache-tomcat-9.0.71/bin/startup.sh
-                ''' 
-            }
             }
         }
     }
