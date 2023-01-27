@@ -15,9 +15,9 @@ pipeline {
         }
         stage('Deploy') {           
             steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'c9a67922-f8dd-4a8a-a96a-9bbf14b2dda5', keyFileVariable: 'new', usernameVariable: 'ubuntu')]) {
+                withCredentials([sshUserPrivateKey(credentialsId: '65.0.93.236', keyFileVariable: 'new', usernameVariable: 'ubuntu')]) {
                 sh'''
-                ssh -i ${new} -o StrictHostKeyChecking=no ubuntu@13.233.124.0<<EOF
+                ssh -i {new} -o StrictHostKeyChecking=no ubuntu@13.233.124.0<<EOF
                 sudo apt update -y
                 sudo apt install awscli -y
                 curl -O https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.71/bin/apache-tomcat-9.0.71.tar.gz
